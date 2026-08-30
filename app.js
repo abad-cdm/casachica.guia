@@ -14,6 +14,86 @@ let mapaCompleto = null;
 let miniMapa = null;
 
 // ======================================================
+// SPLASH: CARRUSEL DE FOTOS DE LAS CREADORAS
+// ======================================================
+
+// 👇 AQUÍ PONES TUS PROPIAS URLS DE IMÁGENES
+const fotosCreadoras = [
+     'https://i.postimg.cc/4yzqSgps/bicicletas.png', // mujer1
+    'https://i.postimg.cc/jqpR3q0z/Captura-de-pantalla-2026-08-30-203151.png', // mujer2
+    'https://i.postimg.cc/sxvC68wF/hermanas.jpg', // mujer3
+    'https://i.postimg.cc/FK7qQc0S/casa-chica.png'  // mujer4
+];
+
+
+let splashInterval = null;
+let splashIndex = 0;
+
+function iniciarCarruselSplash() {
+    const slider = document.getElementById('splashSlider');
+    const dotsContainer = document.getElementById('splashDots');
+
+    slider.innerHTML = '';
+    dotsContainer.innerHTML = '';
+
+    fotosCreadoras.forEach((url, i) => {
+        const slide = document.createElement('div');
+        slide.className = 'splash-slide';
+        slide.style.backgroundImage = `url(${url})`;
+        slide.dataset.index = i;
+        slider.appendChild(slide);
+
+        const dot = document.createElement('span');
+        dot.className = 'splash-dot' + (i === 0 ? ' active' : '');
+        dot.dataset.index = i;
+        dot.addEventListener('click', () => irASlide(i));
+        dotsContainer.appendChild(dot);
+    });
+
+    irASlide(0);
+
+    if (splashInterval) clearInterval(splashInterval);
+    splashInterval = setInterval(() => {
+        const next = (splashIndex + 1) % fotosCreadoras.length;
+        irASlide(next);
+    }, 4000);
+}
+
+function irASlide(index) {
+    splashIndex = index;
+    const slider = document.getElementById('splashSlider');
+    slider.style.transform = `translateX(-${index * 100}%)`;
+
+    document.querySelectorAll('.splash-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+    });
+}
+
+// Botón "Explorar Sanlúcar"
+document.getElementById('splashBtn').addEventListener('click', function() {
+    if (splashInterval) {
+        clearInterval(splashInterval);
+        splashInterval = null;
+    }
+    const splashScreen = document.querySelector('[data-screen="splash"]');
+    const inicioScreen = document.querySelector('[data-screen="inicio"]');
+    splashScreen.classList.remove('active');
+    inicioScreen.classList.add('active');
+
+    // Activar el nav-item de inicio
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.screenTarget === 'inicio');
+    });
+
+    if (lugares.length === 0) {
+        cargarDatosInicio();
+    } else {
+        renderizarRecomendados();
+        inicializarMiniMapa();
+    }
+});
+
+// ======================================================
 // FUNCIONES DE SUPABASE
 // ======================================================
 
@@ -91,6 +171,13 @@ function mostrarPantalla(nombre) {
 // Eventos para navegación desde la barra inferior y tiles
 document.querySelectorAll("[data-screen-target]").forEach(function(el) {
     el.addEventListener("click", function() {
+        if (el.dataset.screenTarget === 'inicio') {
+            const splash = document.querySelector('[data-screen="splash"]');
+            if (splash && splash.classList.contains('active')) {
+                document.getElementById('splashBtn').click();
+                return;
+            }
+        }
         mostrarPantalla(el.dataset.screenTarget);
     });
 });
@@ -416,10 +503,10 @@ document.getElementById("openFullMap").addEventListener("click", function() {
 });
 
 // ======================================================
-// ARRANQUE DE LA APP
+// CARGA DE DATOS (se llama al hacer clic en Explorar)
 // ======================================================
 
-async function iniciarApp() {
+async function cargarDatosInicio() {
     document.getElementById('loadingIndicator').style.display = 'block';
 
     const datos = await cargarLugaresDesdeSupabase();
@@ -435,4 +522,8 @@ async function iniciarApp() {
     inicializarMiniMapa();
 }
 
-iniciarApp();
+// ======================================================
+// ARRANQUE DE LA APP (solo splash)
+// ======================================================
+
+iniciarCarruselSplash();

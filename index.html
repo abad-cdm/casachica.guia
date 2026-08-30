@@ -13,16 +13,35 @@
 <body>
     <div class="phone">
 
-        <!-- PANTALLA: INICIO -->
-        <section class="screen active" data-screen="inicio">
+        <!-- ==========================================
+             PANTALLA: SPLASH (bienvenida con fotos)
+        =========================================== -->
+        <section class="screen active" data-screen="splash">
+            <div class="splash-container">
+                <div class="splash-slider" id="splashSlider">
+                    <!-- Las imágenes se inyectan desde JS -->
+                </div>
+                <div class="splash-overlay">
+                    <div class="splash-brand">Casa&nbsp;Chica</div>
+                    <h1 class="splash-title">Descubre Sanlúcar</h1>
+                    <p class="splash-sub">Una selección de sitios, planes y rincones elegidos a mano por nosotras para tu estancia.</p>
+                    <div class="splash-dots" id="splashDots"></div>
+                    <button class="splash-btn" id="splashBtn">Explorar Sanlúcar</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             PANTALLA: INICIO (antigua pantalla principal)
+        =========================================== -->
+        <section class="screen" data-screen="inicio">
             <div class="hero">
                 <header class="topbar">
                     <span class="brand">Casa&nbsp;Chica</span>
-                    <!-- Sin botón de menú -->
                 </header>
                 <div class="hero-text">
                     <h1>Descubre Sanlúcar</h1>
-                    <p>Una selección de sitios, planes y rincones elegidos a mano por nosotros para tu estancia.</p>
+                    <p>Una selección de sitios, planes y rincones elegidos a mano por nosotras para tu estancia.</p>
                 </div>
             </div>
 
@@ -142,7 +161,7 @@
         </section>
 
         <!-- BARRA INFERIOR -->
-        <nav class="bottom-nav">
+        <nav class="bottom-nav" id="bottomNav">
             <button class="nav-item active" data-screen-target="inicio">
                 <span>🏠</span>
                 Inicio
@@ -166,3 +185,4 @@
 </body>
 
 </html>
+
