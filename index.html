@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Casa Chica · Guía de Sanlúcar</title>
+    <meta name="theme-color" content="#3E6E8E">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="phone">
+
+        <!-- PANTALLA: INICIO -->
+        <section class="screen active" data-screen="inicio">
+            <div class="hero">
+                <header class="topbar">
+                    <span class="brand">Casa&nbsp;Chica</span>
+                    <!-- Sin botón de menú -->
+                </header>
+                <div class="hero-text">
+                    <h1>Descubre Sanlúcar</h1>
+                    <p>Una selección de sitios, planes y rincones elegidos a mano por nosotros para tu estancia.</p>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="search-pill">
+                    <span class="search-icon">🔎</span>
+                    <input type="text" id="searchInput" placeholder="Buscar playas, comida, planes…">
+                </div>
+
+                <div class="glass-grid" id="categoryGrid">
+                    <button class="glass-tile" data-category="sitios">
+                        <span class="glass-tile-icon">📍</span>
+                        <span class="glass-tile-label">Sitios</span>
+                    </button>
+                    <button class="glass-tile" data-category="quehacer">
+                        <span class="glass-tile-icon">🧭</span>
+                        <span class="glass-tile-label">Qué hacer</span>
+                    </button>
+                    <button class="glass-tile" data-category="comida">
+                        <span class="glass-tile-icon">🍴</span>
+                        <span class="glass-tile-label">Comida</span>
+                    </button>
+                    <button class="glass-tile glass-tile-map" data-screen-target="mapa">
+                        <span class="glass-tile-icon">🗺️</span>
+                        <span class="glass-tile-label">Mapa para<br>crear tu ruta</span>
+                    </button>
+                </div>
+
+                <div class="section-block">
+                    <div class="section-heading">
+                        <h2>⭐ Recomendados de Casa Chica</h2>
+                    </div>
+                    <div class="carousel" id="recommendedCarousel"></div>
+                </div>
+
+                <div class="section-block">
+                    <div class="section-heading">
+                        <h2>El mapa de la zona</h2>
+                        <button class="text-link" data-screen-target="mapa">Ver mapa completo →</button>
+                    </div>
+                    <button class="mini-map-frame" id="openFullMap" aria-label="Abrir mapa completo">
+                        <div id="miniMap"></div>
+                    </button>
+                </div>
+
+                <div id="loadingIndicator" style="display:none; text-align:center; padding:20px;">
+                    <span style="font-size:24px;">⏳</span>
+                    <p>Cargando lugares...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANTALLA: CATEGORÍA -->
+        <section class="screen" data-screen="categoria">
+            <header class="subbar">
+                <button class="icon-btn" data-back="inicio" aria-label="Volver">←</button>
+                <h1 id="categoryTitle">Sitios</h1>
+            </header>
+            <div class="content">
+                <div class="place-list" id="categoryList"></div>
+            </div>
+        </section>
+
+        <!-- PANTALLA: BÚSQUEDA -->
+        <section class="screen" data-screen="busqueda">
+            <header class="subbar">
+                <button class="icon-btn" data-back="inicio" aria-label="Volver">←</button>
+                <h1>Resultados</h1>
+            </header>
+            <div class="content">
+                <div class="place-list" id="searchList"></div>
+            </div>
+        </section>
+
+        <!-- PANTALLA: FICHA -->
+        <section class="screen" data-screen="ficha">
+            <header class="subbar subbar-transparent">
+                <button class="icon-btn" id="backFromDetail" aria-label="Volver">←</button>
+            </header>
+            <div class="detail-photo" id="detailPhoto">📸</div>
+            <div class="detail-sheet">
+                <span class="pill-tag" id="detailCategoria">Restaurante</span>
+                <h1 id="detailNombre">Nombre del lugar</h1>
+                <span class="badge-recomendado" id="detailBadge">★ Recomendado por Casa Chica</span>
+                <p class="detail-desc" id="detailDescripcion">Descripción…</p>
+                <div class="detail-meta">
+                    <span id="detailDistancia">📍 — km</span>
+                    <span id="detailPrecio">💰 —</span>
+                    <span id="detailHorario">🕒 —</span>
+                </div>
+                <div class="detail-actions">
+                    <button class="btn-glass-dark" id="detailComoLlegar">🧭 Cómo llegar</button>
+                    <button class="btn-glass-light" id="detailVerMapa">🗺️ Ver en mapa</button>
+                    <button class="btn-fav" id="detailFavorito" aria-label="Guardar en favoritos">☆</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANTALLA: MAPA COMPLETO -->
+        <section class="screen" data-screen="mapa">
+            <header class="subbar subbar-transparent">
+                <button class="icon-btn" data-back="inicio" aria-label="Volver">←</button>
+                <h1>Mapa</h1>
+            </header>
+            <div id="fullMap"></div>
+        </section>
+
+        <!-- PANTALLA: FAVORITOS -->
+        <section class="screen" data-screen="favoritos">
+            <header class="subbar">
+                <button class="icon-btn" data-back="inicio" aria-label="Volver">←</button>
+                <h1>Favoritos</h1>
+            </header>
+            <div class="content">
+                <div class="place-list" id="favoritesList"></div>
+            </div>
+        </section>
+
+        <!-- BARRA INFERIOR -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-screen-target="inicio">
+                <span>🏠</span>
+                Inicio
+            </button>
+            <button class="nav-item" data-screen-target="mapa">
+                <span>🗺️</span>
+                Mapa
+            </button>
+            <button class="nav-item" data-screen-target="favoritos">
+                <span>⭐</span>
+                Favoritos
+            </button>
+        </nav>
+
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="settings.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
