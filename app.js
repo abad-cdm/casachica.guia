@@ -35,8 +35,6 @@ const ICONOS = {
 };
 
 // Icono por categoría, para sustituir al emoji libre que se guardaba antes
-// (se sigue guardando el campo "emoji" en Supabase por compatibilidad, pero
-// ya no se usa para pintar el icono en pantalla).
 function iconoPorCategoria(categoria) {
     if (categoria === 'comida') return ICONOS.comida;
     if (categoria === 'quehacer') return ICONOS.brujula;
@@ -200,8 +198,6 @@ async function cargarFavoritosCacheSupabase() {
     favoritosCache = data.map(function(fila) { return fila.place_id; });
 }
 
-// Si el usuario tenía favoritos guardados en este móvil antes de tener
-// cuenta, los volcamos a Supabase la primera vez que inicia sesión.
 async function migrarFavoritosLocalesASupabase() {
     if (!sesionUsuario) return;
 
@@ -242,7 +238,6 @@ async function alternarFavorito(id) {
     const indice = favoritosCache.indexOf(id);
     const eraFavorito = indice !== -1;
 
-    // Actualización optimista: la interfaz no espera a la red.
     if (eraFavorito) {
         favoritosCache.splice(indice, 1);
     } else {
@@ -849,8 +844,8 @@ document.getElementById('addPlaceGuardarBtn').addEventListener('click', async fu
 // CUENTA DE USUARIO — registro, login, perfil y admin
 // ======================================================
 
-let sesionUsuario = null;   // objeto user de Supabase Auth, o null
-let perfilUsuario = null;   // { nombre, is_admin }, o null
+let sesionUsuario = null;
+let perfilUsuario = null;
 
 function esAdmin() {
     return !!(perfilUsuario && perfilUsuario.is_admin);
@@ -870,8 +865,6 @@ async function cargarPerfil(userId) {
     return data;
 }
 
-// Punto único que deja sesionUsuario/perfilUsuario/favoritos e interfaz
-// consistentes, se llame desde donde se llame (arranque, login, logout...).
 async function sincronizarSesion(session) {
     sesionUsuario = session ? session.user : null;
 
@@ -899,8 +892,6 @@ async function inicializarSesion() {
     await sincronizarSesion(data ? data.session : null);
 }
 
-// Cambios de sesión en segundo plano (token renovado, cierre desde otra
-// pestaña, etc.) mantienen la interfaz sincronizada.
 window.supabaseClient.auth.onAuthStateChange(function(_event, session) {
     sincronizarSesion(session);
 });
@@ -923,7 +914,6 @@ function actualizarUICuenta() {
         navIcon.innerHTML = ICONOS.cuenta;
     }
 
-    // Pantalla "Mi cuenta"
     document.getElementById('cuentaLogged').style.display = logueado ? 'block' : 'none';
     document.getElementById('cuentaForms').style.display = logueado ? 'none' : 'block';
     if (logueado) {
@@ -933,7 +923,6 @@ function actualizarUICuenta() {
         document.getElementById('cuentaAvatar').textContent = inicial || '·';
     }
 
-    // Tarjeta del splash
     document.getElementById('splashAuthWelcome').style.display = logueado ? 'block' : 'none';
     document.getElementById('splashAuthForms').style.display = logueado ? 'none' : 'block';
     if (logueado) {
@@ -944,8 +933,6 @@ function actualizarUICuenta() {
         mostrarPantalla('inicio');
     }
 }
-
-// --- Registro y login (formularios genéricos, reutilizados en splash y en "Mi cuenta") ---
 
 async function registrarUsuario(ids, onSuccess) {
     const nombre = document.getElementById(ids.nombre).value.trim();
@@ -980,7 +967,6 @@ async function registrarUsuario(ids, onSuccess) {
     }
 
     if (data.session) {
-        // Confirmación de email desactivada en el proyecto: entra directamente.
         mensaje.innerHTML = '<span class="ruta-resumen-ok">¡Cuenta creada! Bienvenido/a, ' + nombre + '.</span>';
         await sincronizarSesion(data.session);
         if (onSuccess) onSuccess();
@@ -1049,8 +1035,6 @@ function configurarTabsAuth(tabSignupId, tabLoginId, panelSignupId, panelLoginId
 configurarTabsAuth('tabSignup', 'tabLogin', 'panelSignup', 'panelLogin');
 configurarTabsAuth('cuentaTabSignup', 'cuentaTabLogin', 'cuentaPanelSignup', 'cuentaPanelLogin');
 
-// --- Splash: crear cuenta / iniciar sesión / continuar / cerrar sesión ---
-
 document.getElementById('signupBtn').addEventListener('click', function() {
     registrarUsuario({
         nombre: 'signupNombre', email: 'signupEmail', password: 'signupPassword',
@@ -1075,8 +1059,6 @@ document.getElementById('splashContinueBtn').addEventListener('click', function(
 
 document.getElementById('splashLogoutBtn').addEventListener('click', cerrarSesionUsuario);
 
-// --- Pantalla "Mi cuenta": crear cuenta / iniciar sesión / cerrar sesión / ir a admin ---
-
 document.getElementById('cuentaSignupBtn').addEventListener('click', function() {
     registrarUsuario({
         nombre: 'cuentaSignupNombre', email: 'cuentaSignupEmail', password: 'cuentaSignupPassword',
@@ -1098,7 +1080,7 @@ document.getElementById('cuentaAdminBtn').addEventListener('click', function() {
 document.getElementById('adminLogout').addEventListener('click', cerrarSesionUsuario);
 
 // ======================================================
-// ADMIN — TODOS LOS LUGARES + EDICIÓN + ELIMINACIÓN
+// ADMIN — TODOS LOS LUGARES + EDICIÓN + ELIMINACIÓN + GEOCODIFICACIÓN
 // ======================================================
 
 async function cargarTodosLosLugaresAdmin() {
@@ -1144,7 +1126,8 @@ function renderizarAdminLista(lista, contenedor) {
                     <span style="font-size:11px;">${estado}</span>
                 </div>
                 <div style="font-size:12px; color:var(--ink-soft); margin-top:4px;">
-                    ${lugar.descripcion || 'Sin descripción'}
+                    ${lugar.direccion ? '📍 ' + lugar.direccion : ''}
+                    ${lugar.descripcion ? ' · ' + lugar.descripcion : ''}
                 </div>
             </div>
             <div style="display:flex; gap:6px; flex-shrink:0;">
@@ -1166,7 +1149,38 @@ function renderizarAdminLista(lista, contenedor) {
     });
 }
 
-// --- Editar lugar ---
+// --- Geocodificación ---
+
+async function geocodificarDireccion(direccion) {
+    if (!direccion || direccion.trim() === '') {
+        return null;
+    }
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion)}&limit=1`;
+    try {
+        const respuesta = await fetch(url, {
+            headers: { 'User-Agent': 'CasaChicaApp/1.0' }
+        });
+        if (!respuesta.ok) {
+            console.error('Error en geocodificación:', respuesta.status);
+            return null;
+        }
+        const datos = await respuesta.json();
+        if (datos && datos.length > 0) {
+            const lugar = datos[0];
+            return {
+                lat: parseFloat(lugar.lat),
+                lon: parseFloat(lugar.lon),
+                display_name: lugar.display_name
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error('Error al geocodificar:', error);
+        return null;
+    }
+}
+
+// --- Editar lugar (modal) ---
 
 let lugarEditandoId = null;
 
@@ -1183,6 +1197,7 @@ function abrirEditarLugar(id) {
     document.getElementById('editPlaceCategoria').value = lugar.categoria || 'sitios';
     document.getElementById('editPlaceTipo').value = lugar.tipo || '';
     document.getElementById('editPlaceDescripcion').value = lugar.descripcion || '';
+    document.getElementById('editPlaceDireccion').value = lugar.direccion || '';
     document.getElementById('editPlaceLat').value = lugar.lat || '';
     document.getElementById('editPlaceLon').value = lugar.lon || '';
     document.getElementById('editPlacePrecio').value = lugar.precio || '';
@@ -1191,12 +1206,23 @@ function abrirEditarLugar(id) {
     document.getElementById('editPlaceActivo').checked = !!lugar.activo;
 
     document.getElementById('editPlaceMensaje').innerHTML = '';
-    document.getElementById('editPlacePanel').classList.add('visible');
+    document.getElementById('geocodeMensaje').innerHTML = '';
+
+    // Mostrar modal
+    document.getElementById('editModal').style.display = 'flex';
 }
 
-document.getElementById('closeEditPlacePanel').addEventListener('click', function() {
-    document.getElementById('editPlacePanel').classList.remove('visible');
+document.getElementById('closeEditModal').addEventListener('click', function() {
+    document.getElementById('editModal').style.display = 'none';
     lugarEditandoId = null;
+});
+
+// Cerrar modal al hacer clic fuera del contenido
+document.getElementById('editModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        this.style.display = 'none';
+        lugarEditandoId = null;
+    }
 });
 
 document.getElementById('editPlaceGuardarBtn').addEventListener('click', async function() {
@@ -1209,6 +1235,7 @@ document.getElementById('editPlaceGuardarBtn').addEventListener('click', async f
     const categoria = document.getElementById('editPlaceCategoria').value;
     const tipo = document.getElementById('editPlaceTipo').value.trim();
     const descripcion = document.getElementById('editPlaceDescripcion').value.trim();
+    const direccion = document.getElementById('editPlaceDireccion').value.trim();
     const lat = parseFloat(document.getElementById('editPlaceLat').value);
     const lon = parseFloat(document.getElementById('editPlaceLon').value);
     const precio = document.getElementById('editPlacePrecio').value.trim();
@@ -1231,6 +1258,7 @@ document.getElementById('editPlaceGuardarBtn').addEventListener('click', async f
         categoria: categoria,
         tipo: tipo || null,
         descripcion: descripcion || null,
+        direccion: direccion || null,
         lat: lat,
         lon: lon,
         precio: precio || null,
@@ -1262,7 +1290,7 @@ document.getElementById('editPlaceGuardarBtn').addEventListener('click', async f
         await cargarDatosInicio();
         actualizarMarcadoresCompletos();
         cargarTodosLosLugaresAdmin();
-        document.getElementById('editPlacePanel').classList.remove('visible');
+        document.getElementById('editModal').style.display = 'none';
         lugarEditandoId = null;
 
     } catch (err) {
@@ -1271,6 +1299,29 @@ document.getElementById('editPlaceGuardarBtn').addEventListener('click', async f
     }
 
     this.disabled = false;
+});
+
+// Botón de geocodificación
+document.getElementById('geocodeBtn').addEventListener('click', async function() {
+    const direccion = document.getElementById('editPlaceDireccion').value.trim();
+    const mensaje = document.getElementById('geocodeMensaje');
+    if (!direccion) {
+        mensaje.innerHTML = '<span style="color:#B54708;">Escribe una dirección primero.</span>';
+        return;
+    }
+    mensaje.textContent = 'Buscando…';
+    this.disabled = true;
+
+    const resultado = await geocodificarDireccion(direccion);
+    this.disabled = false;
+
+    if (resultado) {
+        document.getElementById('editPlaceLat').value = resultado.lat;
+        document.getElementById('editPlaceLon').value = resultado.lon;
+        mensaje.innerHTML = `<span style="color:var(--dusk-blue);">✅ Coordenadas actualizadas: ${resultado.lat}, ${resultado.lon}</span>`;
+    } else {
+        mensaje.innerHTML = '<span style="color:#B54708;">❌ No se encontró esa dirección. Prueba con más detalles (ciudad, calle, etc.).</span>';
+    }
 });
 
 // --- Eliminar lugar ---
@@ -1290,9 +1341,8 @@ async function eliminarLugar(id) {
             return;
         }
 
-        // Limpiar favoritos que referencien este lugar (opcional, pero recomendable)
+        // Limpiar favoritos que referencien este lugar
         if (sesionUsuario) {
-            // Eliminar de favoritos locales y de Supabase si existe
             const idx = favoritosCache.indexOf(id);
             if (idx !== -1) {
                 favoritosCache.splice(idx, 1);
@@ -1346,6 +1396,6 @@ async function cargarDatosInicio() {
 // ARRANQUE
 // ======================================================
 
-cargarFavoritosCacheLocal(); // valor por defecto mientras se comprueba si hay sesión
+cargarFavoritosCacheLocal();
 iniciarCarruselSplash();
 inicializarSesion();
