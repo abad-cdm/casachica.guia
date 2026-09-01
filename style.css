@@ -5,24 +5,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-    --dusk-coral: #FF9A76;
-    --dusk-pink: #FF6F91;
-    --dusk-blue: #3E6E8E;
-    --dusk-deep: #274760;
-    --sand: #F2E8D8;
-    --ink: #1F2A33;
-    --ink-soft: rgba(31, 42, 51, 0.66);
-    --ink-faint: rgba(31, 42, 51, 0.42);
-    --manzanilla: #C9A94F;
+    /* Paleta Casa Chica: granate, blanco cálido y un dorado sutil (granada) */
+    --dusk-coral: #A6394A;   /* granate claro — acentos y degradados */
+    --dusk-pink: #7A1B2B;    /* granate — color principal de marca */
+    --dusk-blue: #4A0F1C;    /* granate oscuro — contraste y fondos */
+    --dusk-deep: #330A15;    /* granate casi negro — fondos base */
+    --sand: #FBF7F2;         /* blanco cálido — fondo principal */
+    --ink: #241512;          /* casi negro cálido — texto principal */
+    --ink-soft: rgba(36, 21, 18, 0.64);
+    --ink-faint: rgba(36, 21, 18, 0.42);
+    --manzanilla: #B08A4E;   /* dorado — detalle, como la corona de la granada */
+    --garnet: #7A1B2B;
+    --garnet-deep: #4A0F1C;
+    --garnet-soft: #A6394A;
     --glass-fill: rgba(255, 255, 255, 0.30);
     --glass-fill-strong: rgba(255, 255, 255, 0.5);
     --glass-border: rgba(255, 255, 255, 0.55);
-    --glass-dark-fill: rgba(31, 42, 51, 0.55);
+    --glass-dark-fill: rgba(74, 15, 28, 0.55);
     --glass-dark-border: rgba(255, 255, 255, 0.18);
     --font-display: 'Fraunces', Georgia, serif;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    --r-tile: 30px;
-    --r-card: 22px;
+    --r-tile: 24px;
+    --r-card: 18px;
     --r-pill: 999px;
 }
 
@@ -110,11 +114,21 @@ img { max-width: 100%; display: block; }
 }
 
 .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
     font-family: var(--font-display);
     font-weight: 600;
     font-size: 21px;
     color: #fff;
     letter-spacing: 0.01em;
+}
+
+.brand-mark {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--manzanilla);
 }
 
 .icon-btn {
@@ -131,6 +145,11 @@ img { max-width: 100%; display: block; }
     align-items: center;
     justify-content: center;
     cursor: pointer;
+}
+
+.icon-btn svg {
+    width: 19px;
+    height: 19px;
 }
 
 .hero-text {
@@ -166,12 +185,18 @@ img { max-width: 100%; display: block; }
     margin-top: -40px;
     position: relative;
     z-index: 2;
-    box-shadow: 0 10px 30px rgba(39, 71, 96, 0.18);
+    box-shadow: 0 10px 30px rgba(74, 15, 28, 0.18);
 }
 
 .search-icon {
-    font-size: 15px;
-    opacity: 0.6;
+    display: flex;
+    opacity: 0.55;
+    color: var(--ink);
+}
+
+.search-icon svg {
+    width: 17px;
+    height: 17px;
 }
 
 #searchInput {
@@ -203,7 +228,7 @@ img { max-width: 100%; display: block; }
     backdrop-filter: blur(18px) saturate(140%);
     -webkit-backdrop-filter: blur(18px) saturate(140%);
     box-shadow:
-        0 8px 22px rgba(39, 71, 96, 0.16),
+        0 8px 22px rgba(74, 15, 28, 0.16),
         inset 0 1px 0 rgba(255,255,255,0.6);
     display: flex;
     flex-direction: column;
@@ -221,7 +246,13 @@ img { max-width: 100%; display: block; }
 }
 
 .glass-tile-icon {
-    font-size: 28px;
+    display: flex;
+    color: var(--garnet);
+}
+
+.glass-tile-icon svg {
+    width: 26px;
+    height: 26px;
 }
 
 .glass-tile-label {
@@ -251,8 +282,18 @@ img { max-width: 100%; display: block; }
 }
 
 .section-heading h2 {
+    display: flex;
+    align-items: center;
+    gap: 7px;
     font-size: 17px;
     font-weight: 600;
+}
+
+.heading-icon {
+    width: 15px;
+    height: 15px;
+    color: var(--manzanilla);
+    flex-shrink: 0;
 }
 
 .text-link {
@@ -284,7 +325,7 @@ img { max-width: 100%; display: block; }
     scroll-snap-align: start;
     border-radius: var(--r-card);
     background: #fff;
-    box-shadow: 0 8px 20px rgba(39, 71, 96, 0.12);
+    box-shadow: 0 8px 20px rgba(74, 15, 28, 0.12);
     overflow: hidden;
     cursor: pointer;
     text-align: left;
@@ -296,21 +337,35 @@ img { max-width: 100%; display: block; }
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 26px;
+    color: #fff;
     position: relative;
+}
+
+.rec-card-photo svg {
+    width: 26px;
+    height: 26px;
+    opacity: 0.9;
 }
 
 .rec-card-badge {
     position: absolute;
     top: 8px;
     left: 8px;
-    background: rgba(31, 42, 51, 0.55);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(36, 21, 18, 0.55);
     color: var(--manzanilla);
     font-size: 10px;
     font-weight: 700;
     padding: 3px 8px;
     border-radius: var(--r-pill);
     letter-spacing: 0.02em;
+}
+
+.rec-card-badge svg {
+    width: 9px;
+    height: 9px;
 }
 
 .rec-card-body {
@@ -336,8 +391,8 @@ img { max-width: 100%; display: block; }
     height: 150px;
     border-radius: var(--r-card);
     overflow: hidden;
-    border: 1px solid rgba(39,71,96,0.12);
-    box-shadow: 0 8px 20px rgba(39, 71, 96, 0.12);
+    border: 1px solid rgba(74, 15, 28,0.12);
+    box-shadow: 0 8px 20px rgba(74, 15, 28, 0.12);
     cursor: pointer;
     padding: 0;
     position: relative;
@@ -384,7 +439,7 @@ img { max-width: 100%; display: block; }
     left: 0;
     right: 0;
     background: transparent;
-    z-index: 3;
+    z-index: 10;
     padding-top: 18px;
 }
 
@@ -392,6 +447,8 @@ img { max-width: 100%; display: block; }
     background: var(--glass-dark-fill);
     border-color: var(--glass-dark-border);
     color: #fff;
+    z-index: 11;
+    position: relative;
 }
 
 .place-list {
@@ -406,7 +463,7 @@ img { max-width: 100%; display: block; }
     background: #fff;
     border-radius: var(--r-card);
     padding: 10px;
-    box-shadow: 0 6px 16px rgba(39, 71, 96, 0.10);
+    box-shadow: 0 6px 16px rgba(74, 15, 28, 0.10);
     cursor: pointer;
     align-items: center;
 }
@@ -420,7 +477,12 @@ img { max-width: 100%; display: block; }
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    color: #fff;
+}
+
+.place-row-photo svg {
+    width: 24px;
+    height: 24px;
 }
 
 .place-row-body {
@@ -451,8 +513,16 @@ img { max-width: 100%; display: block; }
 }
 
 .place-row-star {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
     color: var(--manzanilla);
     font-size: 12px;
+}
+
+.place-row-star svg {
+    width: 10px;
+    height: 10px;
 }
 
 .empty-state {
@@ -462,8 +532,15 @@ img { max-width: 100%; display: block; }
 }
 
 .empty-state-icon {
-    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    color: var(--dusk-coral);
     margin-bottom: 10px;
+}
+
+.empty-state-icon svg {
+    width: 32px;
+    height: 32px;
 }
 
 .detail-photo {
@@ -472,7 +549,12 @@ img { max-width: 100%; display: block; }
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 60px;
+    color: rgba(255,255,255,0.85);
+}
+
+.detail-photo svg {
+    width: 56px;
+    height: 56px;
 }
 
 .detail-sheet {
@@ -502,11 +584,18 @@ img { max-width: 100%; display: block; }
 }
 
 .badge-recomendado {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     margin-top: 10px;
     color: var(--manzanilla);
     font-size: 12.5px;
     font-weight: 700;
+}
+
+.badge-recomendado svg {
+    width: 12px;
+    height: 12px;
 }
 
 .detail-desc {
@@ -525,6 +614,22 @@ img { max-width: 100%; display: block; }
     flex-wrap: wrap;
 }
 
+.detail-meta span {
+    display: inline-flex;
+    align-items: center;
+}
+
+.meta-icon {
+    display: inline-flex;
+    margin-right: 5px;
+    color: var(--garnet);
+}
+
+.meta-icon svg {
+    width: 14px;
+    height: 14px;
+}
+
 .detail-actions {
     display: flex;
     gap: 10px;
@@ -540,6 +645,17 @@ img { max-width: 100%; display: block; }
     font-size: 14px;
     cursor: pointer;
     text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+}
+
+.btn-glass-dark svg,
+.btn-glass-light svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
 }
 
 .btn-glass-dark {
@@ -550,7 +666,7 @@ img { max-width: 100%; display: block; }
 .btn-glass-light {
     background: #fff;
     color: var(--ink);
-    border: 1px solid rgba(39,71,96,0.15);
+    border: 1px solid rgba(74, 15, 28,0.15);
 }
 
 .btn-fav {
@@ -559,13 +675,17 @@ img { max-width: 100%; display: block; }
     height: 52px;
     border-radius: var(--r-pill);
     background: #fff;
-    border: 1px solid rgba(39,71,96,0.15);
-    font-size: 20px;
+    border: 1px solid rgba(74, 15, 28,0.15);
     color: var(--manzanilla);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.btn-fav svg {
+    width: 21px;
+    height: 21px;
 }
 
 .btn-fav.active {
@@ -581,11 +701,15 @@ img { max-width: 100%; display: block; }
     border-radius: var(--r-pill);
     background: var(--sand);
     color: var(--manzanilla);
-    font-size: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+}
+
+.place-row-fav svg {
+    width: 16px;
+    height: 16px;
 }
 
 .place-row-fav.active {
@@ -595,11 +719,14 @@ img { max-width: 100%; display: block; }
 
 section[data-screen="mapa"] {
     padding-bottom: 0;
+    position: relative;
 }
 
 #fullMap {
     width: 100%;
     height: 100vh;
+    z-index: 1;
+    position: relative;
 }
 
 .leaflet-popup-content-wrapper {
@@ -607,7 +734,7 @@ section[data-screen="mapa"] {
 }
 
 /* ========================================================== */
-/* BARRA INFERIOR - OCULTA POR DEFECTO, VISIBLE SÓLO CUANDO LA PANTALLA ACTIVA NO ES SPLASH */
+/* BARRA INFERIOR */
 /* ========================================================== */
 
 .bottom-nav {
@@ -629,7 +756,6 @@ section[data-screen="mapa"] {
     box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 
-/* Cuando la pantalla activa NO es splash, mostramos la barra */
 .screen.active:not([data-screen="splash"]) ~ .bottom-nav {
     display: flex;
 }
@@ -648,7 +774,26 @@ section[data-screen="mapa"] {
 }
 
 .nav-item span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 17px;
+}
+
+.nav-item span svg {
+    width: 19px;
+    height: 19px;
+}
+
+.nav-item span.nav-avatar {
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background: var(--manzanilla);
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 700;
+    font-family: var(--font-body);
 }
 
 .nav-item.active {
@@ -675,7 +820,7 @@ section[data-screen="mapa"] {
 }
 
 /* ========================================================== */
-/* ESTILOS PARA SPLASH (bienvenida con carrusel) */
+/* SPLASH */
 /* ========================================================== */
 
 .splash-container {
@@ -716,9 +861,13 @@ section[data-screen="mapa"] {
     color: #fff;
     background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%);
     z-index: 2;
+    overflow-y: auto;
 }
 
 .splash-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     font-family: var(--font-display);
     font-weight: 600;
     font-size: 22px;
@@ -726,6 +875,12 @@ section[data-screen="mapa"] {
     color: #fff;
     margin-bottom: 10px;
     text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+.splash-brand .brand-mark {
+    width: 22px;
+    height: 22px;
+    color: var(--manzanilla);
 }
 
 .splash-title {
@@ -789,4 +944,429 @@ section[data-screen="mapa"] {
 
 .splash-btn:hover {
     transform: scale(1.02);
+}
+
+/* Ajustes para que el panel no tape el botón de volver */
+.subbar-transparent {
+    z-index: 35;
+}
+
+/* Para pantallas pequeñas */
+@media (max-width: 420px) {
+    .ruta-panel {
+        max-height: 80vh;
+        padding: 14px 16px 20px;
+    }
+    .btn-ruta-flotante {
+        font-size: 12px;
+        padding: 10px 14px;
+        bottom: 100px;
+    }
+    .splash-title {
+        font-size: 30px;
+    }
+    .splash-sub {
+        font-size: 13.5px;
+        margin-bottom: 16px;
+    }
+    .splash-dots {
+        margin-bottom: 16px;
+    }
+}
+
+/* Ocultar el panel de instrucciones de Routing Machine */
+.leaflet-routing-container {
+    display: none !important;
+}
+
+/* ========================================================== */
+/* BOTONES FLOTANTES DEL MAPA */
+/* ========================================================== */
+
+.mapa-fab-stack {
+    position: absolute;
+    left: 50%;
+    bottom: 110px;
+    transform: translateX(-50%);
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: calc(100% - 40px);
+}
+
+.btn-ruta-flotante {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--glass-dark-fill);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid var(--glass-dark-border);
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    padding: 14px 24px;
+    border-radius: var(--r-pill);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.28);
+    cursor: pointer;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.btn-ruta-flotante svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+.btn-ruta-flotante:active {
+    transform: scale(0.97);
+}
+
+/* ========================================================== */
+/* PANEL INFERIOR (proponer sitio) — bottom sheet */
+/* ========================================================== */
+
+.ruta-panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 80vh;
+    background: var(--sand);
+    border-radius: 26px 26px 0 0;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
+    z-index: 60;
+    padding: 18px 20px 26px;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.25s ease;
+}
+
+.ruta-panel.visible {
+    transform: translateY(0);
+}
+
+.ruta-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.ruta-panel-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.ruta-panel-header h2 svg {
+    width: 17px;
+    height: 17px;
+    color: var(--garnet);
+}
+
+.close-ruta-btn {
+    width: 34px;
+    height: 34px;
+    background: rgba(36, 21, 18,0.08);
+    color: var(--ink);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+}
+
+.close-ruta-btn svg {
+    width: 15px;
+    height: 15px;
+}
+
+.ruta-panel-body label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+}
+
+.ruta-form-input {
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(74, 15, 28,0.15);
+    font-family: var(--font-body);
+    font-size: 14px;
+    background: #fff;
+    margin-bottom: 10px;
+    resize: vertical;
+}
+
+.ruta-resumen-ok {
+    color: var(--dusk-blue) !important;
+}
+
+.ruta-resumen-warning {
+    color: #B54708 !important;
+    font-weight: 600;
+}
+
+/* ========================================================== */
+/* BANNER "TOCA EL MAPA" */
+/* ========================================================== */
+
+.pin-mode-banner {
+    display: none;
+    position: absolute;
+    top: 76px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
+    background: var(--glass-dark-fill);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 10px 10px 16px;
+    border-radius: var(--r-pill);
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.pin-mode-banner .meta-icon {
+    color: var(--manzanilla);
+}
+
+.pin-mode-banner.visible {
+    display: flex;
+}
+
+.pin-mode-banner button {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: var(--r-pill);
+    cursor: pointer;
+}
+
+/* ========================================================== */
+/* AUTENTICACIÓN — splash y pantalla "Mi cuenta" */
+/* ========================================================== */
+
+.splash-auth {
+    width: 100%;
+    max-width: 340px;
+    margin-top: 4px;
+}
+
+.splash-auth-tabs {
+    display: flex;
+    background: rgba(255,255,255,0.16);
+    border-radius: var(--r-pill);
+    padding: 4px;
+    margin-bottom: 12px;
+}
+
+.splash-auth-tab {
+    flex: 1;
+    padding: 9px 6px;
+    border-radius: var(--r-pill);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font-body);
+    color: rgba(255,255,255,0.75);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.splash-auth-tab.active {
+    background: #fff;
+    color: var(--ink);
+}
+
+.splash-auth-input {
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 14px;
+    background: rgba(255,255,255,0.94);
+    color: var(--ink);
+    margin-bottom: 8px;
+}
+
+.splash-auth-input::placeholder {
+    color: var(--ink-faint);
+}
+
+.splash-btn-sm {
+    padding: 13px 20px;
+    font-size: 14.5px;
+    width: 100%;
+    margin-top: 2px;
+}
+
+.splash-link-btn {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.92);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    margin-top: 14px;
+    padding: 4px;
+}
+
+.splash-auth-mensaje {
+    font-size: 12.5px;
+    min-height: 4px;
+    margin-top: 6px;
+    color: #fff;
+    text-align: center;
+}
+
+.splash-auth-welcome {
+    text-align: center;
+}
+
+.splash-auth-hello {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 14px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+/* Variante oscura de las pestañas para la pantalla "Mi cuenta" (fondo claro) */
+.splash-auth-tabs-dark {
+    background: rgba(74, 15, 28, 0.08);
+}
+
+.splash-auth-tab-dark {
+    color: var(--ink-soft);
+}
+
+.splash-auth-tab-dark.active {
+    background: #fff;
+    color: var(--ink);
+    box-shadow: 0 2px 8px rgba(74, 15, 28,0.12);
+}
+
+.cuenta-card {
+    text-align: center;
+    padding: 32px 20px;
+    background: #fff;
+    border-radius: var(--r-card);
+    box-shadow: 0 6px 16px rgba(74, 15, 28, 0.10);
+}
+
+.cuenta-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(140deg, var(--dusk-coral), var(--dusk-pink));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 auto 14px;
+}
+
+.cuenta-card h2 {
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.cuenta-email {
+    color: var(--ink-soft);
+    font-size: 13px;
+    margin: 4px 0 0;
+}
+
+/* ========================================================== */
+/* ADMIN */
+/* ========================================================== */
+
+.admin-row .place-row-body {
+    cursor: default;
+}
+
+.admin-row button {
+    cursor: pointer;
+}
+
+.admin-aceptar,
+.admin-rechazar {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    padding: 7px 12px;
+    border-radius: var(--r-pill);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    transition: background 0.15s ease;
+}
+
+.admin-aceptar svg,
+.admin-rechazar svg {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+}
+
+.admin-aceptar {
+    background: var(--garnet);
+}
+
+.admin-rechazar {
+    background: #6B645F;
+}
+
+.admin-aceptar:hover {
+    background: var(--garnet-deep) !important;
+}
+.admin-rechazar:hover {
+    background: #4F4A46 !important;
+}
+/* ========================================================== */
+/* CARGA */
+/* ========================================================== */
+
+.loading-mark {
+    display: inline-flex;
+    color: var(--garnet);
+    animation: latido 1.1s ease-in-out infinite;
+}
+
+.loading-mark svg {
+    width: 30px;
+    height: 30px;
+}
+
+@keyframes latido {
+    0%, 100% { transform: scale(1); opacity: 0.85; }
+    50% { transform: scale(1.12); opacity: 1; }
 }

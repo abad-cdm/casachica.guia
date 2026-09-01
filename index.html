@@ -5,39 +5,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Casa Chica · Guía de Sanlúcar</title>
-    <meta name="theme-color" content="#3E6E8E">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <meta name="theme-color" content="#7A1B2B">
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="phone">
 
-        <!-- ==========================================
-             PANTALLA: SPLASH (bienvenida con fotos)
-        =========================================== -->
+        <!-- SPLASH -->
         <section class="screen active" data-screen="splash">
             <div class="splash-container">
-                <div class="splash-slider" id="splashSlider">
-                    <!-- Las imágenes se inyectan desde JS -->
-                </div>
+                <div class="splash-slider" id="splashSlider"></div>
                 <div class="splash-overlay">
-                    <div class="splash-brand">Casa&nbsp;Chica</div>
+                    <div class="splash-brand"><svg viewBox="0 0 24 24" fill="currentColor" class="brand-mark"><path d="M12 2.2c.5.6 1 1.3 1 2 0 .5-.3.8-.6 1.1 3.4.5 6 3.4 6 6.9 0 4-3.3 8.6-6.4 9.6-.9.3-1.7.3-2.6 0C6.3 20.6 3 16 3 12c0-3.5 2.6-6.4 6-6.9-.3-.3-.6-.6-.6-1.1 0-.7.5-1.4 1-2 .3.4.6.8.6 1.3 0 .3-.1.5-.3.7.4-.1.9-.1 1.3-.1.4 0 .9 0 1.3.1-.2-.2-.3-.4-.3-.7 0-.5.3-.9.6-1.3z"/><circle cx="9.5" cy="12.5" r="1" fill="#fff"/><circle cx="12.5" cy="10.5" r="1" fill="#fff"/><circle cx="11.5" cy="14.5" r="1" fill="#fff"/><circle cx="14.5" cy="13" r="1" fill="#fff"/></svg>Casa&nbsp;Chica</div>
                     <h1 class="splash-title">Descubre Sanlúcar</h1>
                     <p class="splash-sub">Una selección de sitios, planes y rincones elegidos a mano por nosotras para tu estancia.</p>
                     <div class="splash-dots" id="splashDots"></div>
-                    <button class="splash-btn" id="splashBtn">Explorar Sanlúcar</button>
+
+                    <div class="splash-auth" id="splashAuth">
+
+                        <!-- Ya hay sesión iniciada -->
+                        <div class="splash-auth-welcome" id="splashAuthWelcome" style="display:none;">
+                            <p class="splash-auth-hello" id="splashAuthHello">¡Hola de nuevo!</p>
+                            <button class="splash-btn" id="splashContinueBtn">Continuar</button>
+                            <button class="splash-link-btn" id="splashLogoutBtn">Cerrar sesión</button>
+                        </div>
+
+                        <!-- Sin sesión: crear cuenta / iniciar sesión -->
+                        <div id="splashAuthForms">
+                            <div class="splash-auth-tabs">
+                                <button class="splash-auth-tab active" id="tabSignup" type="button">Crear cuenta</button>
+                                <button class="splash-auth-tab" id="tabLogin" type="button">Iniciar sesión</button>
+                            </div>
+
+                            <div class="splash-auth-panel" id="panelSignup">
+                                <input type="text" id="signupNombre" class="splash-auth-input" placeholder="Tu nombre" autocomplete="name">
+                                <input type="email" id="signupEmail" class="splash-auth-input" placeholder="Email" autocomplete="username">
+                                <input type="password" id="signupPassword" class="splash-auth-input" placeholder="Contraseña" autocomplete="new-password">
+                                <button class="splash-btn splash-btn-sm" id="signupBtn" type="button">Crear cuenta</button>
+                            </div>
+
+                            <div class="splash-auth-panel" id="panelLogin" style="display:none;">
+                                <input type="email" id="loginEmail" class="splash-auth-input" placeholder="Email" autocomplete="username">
+                                <input type="password" id="loginPassword" class="splash-auth-input" placeholder="Contraseña" autocomplete="current-password">
+                                <button class="splash-btn splash-btn-sm" id="loginBtn" type="button">Iniciar sesión</button>
+                            </div>
+
+                            <div id="splashAuthMensaje" class="splash-auth-mensaje"></div>
+
+                            <button class="splash-link-btn" id="splashBtn" type="button">Seguir sin cuenta</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- ==========================================
-             PANTALLA: INICIO (antigua pantalla principal)
-        =========================================== -->
+        <!-- INICIO -->
         <section class="screen" data-screen="inicio">
             <div class="hero">
                 <header class="topbar">
-                    <span class="brand">Casa&nbsp;Chica</span>
+                    <span class="brand"><svg viewBox="0 0 24 24" fill="currentColor" class="brand-mark"><path d="M12 2.2c.5.6 1 1.3 1 2 0 .5-.3.8-.6 1.1 3.4.5 6 3.4 6 6.9 0 4-3.3 8.6-6.4 9.6-.9.3-1.7.3-2.6 0C6.3 20.6 3 16 3 12c0-3.5 2.6-6.4 6-6.9-.3-.3-.6-.6-.6-1.1 0-.7.5-1.4 1-2 .3.4.6.8.6 1.3 0 .3-.1.5-.3.7.4-.1.9-.1 1.3-.1.4 0 .9 0 1.3.1-.2-.2-.3-.4-.3-.7 0-.5.3-.9.6-1.3z"/><circle cx="9.5" cy="12.5" r="1" fill="#fff"/><circle cx="12.5" cy="10.5" r="1" fill="#fff"/><circle cx="11.5" cy="14.5" r="1" fill="#fff"/><circle cx="14.5" cy="13" r="1" fill="#fff"/></svg>Casa&nbsp;Chica</span>
                 </header>
                 <div class="hero-text">
                     <h1>Descubre Sanlúcar</h1>
@@ -47,57 +79,63 @@
 
             <div class="content">
                 <div class="search-pill">
-                    <span class="search-icon">🔎</span>
+                    <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.7-4.7"/></svg></span>
                     <input type="text" id="searchInput" placeholder="Buscar playas, comida, planes…">
                 </div>
 
-                <div class="glass-grid" id="categoryGrid">
-                    <button class="glass-tile" data-category="sitios">
-                        <span class="glass-tile-icon">📍</span>
-                        <span class="glass-tile-label">Sitios</span>
-                    </button>
-                    <button class="glass-tile" data-category="quehacer">
-                        <span class="glass-tile-icon">🧭</span>
-                        <span class="glass-tile-label">Qué hacer</span>
-                    </button>
-                    <button class="glass-tile" data-category="comida">
-                        <span class="glass-tile-icon">🍴</span>
-                        <span class="glass-tile-label">Comida</span>
-                    </button>
-                    <button class="glass-tile glass-tile-map" data-screen-target="mapa">
-                        <span class="glass-tile-icon">🗺️</span>
-                        <span class="glass-tile-label">Mapa para<br>crear tu ruta</span>
-                    </button>
+                <div id="searchResultsContainer" style="display:none;">
+                    <div class="place-list" id="searchList"></div>
                 </div>
 
-                <div class="section-block">
-                    <div class="section-heading">
-                        <h2>⭐ Recomendados de Casa Chica</h2>
+                <div id="normalContent">
+                    <div class="glass-grid" id="categoryGrid">
+                        <button class="glass-tile" data-category="sitios">
+                            <span class="glass-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.58 7-12a7 7 0 1 0-14 0c0 4.42 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg></span>
+                            <span class="glass-tile-label">Sitios</span>
+                        </button>
+                        <button class="glass-tile" data-category="quehacer">
+                            <span class="glass-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.2l-2 5.6-5.6 2 2-5.6z"/></svg></span>
+                            <span class="glass-tile-label">Qué hacer</span>
+                        </button>
+                        <button class="glass-tile" data-category="comida">
+                            <span class="glass-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v7a2 2 0 0 0 4 0V2"/><path d="M9 9v13"/><path d="M17 2c-1.4 0-2.5 1.8-2.5 4s.6 3.6 1.5 4v11"/></svg></span>
+                            <span class="glass-tile-label">Comida</span>
+                        </button>
+                        <button class="glass-tile glass-tile-map" data-screen-target="mapa">
+                            <span class="glass-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3 3 5v16l6-2 6 2 6-2V3l-6 2-6-2z"/><path d="M9 3v16M15 5v16"/></svg></span>
+                            <span class="glass-tile-label">Mapa para<br>crear tu ruta</span>
+                        </button>
                     </div>
-                    <div class="carousel" id="recommendedCarousel"></div>
-                </div>
 
-                <div class="section-block">
-                    <div class="section-heading">
-                        <h2>El mapa de la zona</h2>
-                        <button class="text-link" data-screen-target="mapa">Ver mapa completo →</button>
+                    <div class="section-block">
+                        <div class="section-heading">
+                            <h2><svg viewBox="0 0 24 24" fill="currentColor" class="heading-icon"><path d="M12 2.5l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17.6 5.9 21l1.5-6.8-5.2-4.7 6.9-.7z"/></svg>Recomendados de Casa Chica</h2>
+                        </div>
+                        <div class="carousel" id="recommendedCarousel"></div>
                     </div>
-                    <button class="mini-map-frame" id="openFullMap" aria-label="Abrir mapa completo">
-                        <div id="miniMap"></div>
-                    </button>
+
+                    <div class="section-block">
+                        <div class="section-heading">
+                            <h2>El mapa de la zona</h2>
+                            <button class="text-link" data-screen-target="mapa">Ver mapa completo →</button>
+                        </div>
+                        <button class="mini-map-frame" id="openFullMap" aria-label="Abrir mapa completo">
+                            <div id="miniMap"></div>
+                        </button>
+                    </div>
                 </div>
 
                 <div id="loadingIndicator" style="display:none; text-align:center; padding:20px;">
-                    <span style="font-size:24px;">⏳</span>
+                    <span class="loading-mark"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c.5.6 1 1.3 1 2 0 .5-.3.8-.6 1.1 3.4.5 6 3.4 6 6.9 0 4-3.3 8.6-6.4 9.6-.9.3-1.7.3-2.6 0C6.3 20.6 3 16 3 12c0-3.5 2.6-6.4 6-6.9-.3-.3-.6-.6-.6-1.1 0-.7.5-1.4 1-2 .3.4.6.8.6 1.3 0 .3-.1.5-.3.7.4-.1.9-.1 1.3-.1.4 0 .9 0 1.3.1-.2-.2-.3-.4-.3-.7 0-.5.3-.9.6-1.3z"/></svg></span>
                     <p>Cargando lugares...</p>
                 </div>
             </div>
         </section>
 
-        <!-- PANTALLA: CATEGORÍA -->
+        <!-- CATEGORÍA -->
         <section class="screen" data-screen="categoria">
             <header class="subbar">
-                <button class="icon-btn" data-back="inicio" aria-label="Volver">←</button>
+                <button class="icon-btn" data-back="inicio" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
                 <h1 id="categoryTitle">Sitios</h1>
             </header>
             <div class="content">
@@ -105,54 +143,80 @@
             </div>
         </section>
 
-        <!-- PANTALLA: BÚSQUEDA -->
-        <section class="screen" data-screen="busqueda">
-            <header class="subbar">
-                <button class="icon-btn" data-back="inicio" aria-label="Volver">←</button>
-                <h1>Resultados</h1>
-            </header>
-            <div class="content">
-                <div class="place-list" id="searchList"></div>
-            </div>
-        </section>
-
-        <!-- PANTALLA: FICHA -->
+        <!-- FICHA -->
         <section class="screen" data-screen="ficha">
             <header class="subbar subbar-transparent">
-                <button class="icon-btn" id="backFromDetail" aria-label="Volver">←</button>
+                <button class="icon-btn" id="backFromDetail" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
             </header>
-            <div class="detail-photo" id="detailPhoto">📸</div>
+            <div class="detail-photo" id="detailPhoto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg></div>
             <div class="detail-sheet">
                 <span class="pill-tag" id="detailCategoria">Restaurante</span>
                 <h1 id="detailNombre">Nombre del lugar</h1>
-                <span class="badge-recomendado" id="detailBadge">★ Recomendado por Casa Chica</span>
+                <span class="badge-recomendado" id="detailBadge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17.6 5.9 21l1.5-6.8-5.2-4.7 6.9-.7z"/></svg>Recomendado por Casa Chica</span>
                 <p class="detail-desc" id="detailDescripcion">Descripción…</p>
                 <div class="detail-meta">
-                    <span id="detailDistancia">📍 — km</span>
-                    <span id="detailPrecio">💰 —</span>
-                    <span id="detailHorario">🕒 —</span>
+                    <span id="detailDistancia"><span class="meta-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.58 7-12a7 7 0 1 0-14 0c0 4.42 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg></span> — km</span>
+                    <span id="detailPrecio"><span class="meta-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 15.2c.4.7 1.3 1.1 2.3 1.1 1.5 0 2.7-.8 2.7-2 0-1.1-1-1.6-2.7-2-1.7-.4-2.7-.9-2.7-2 0-1.2 1.2-2 2.7-2 1 0 1.9.4 2.3 1.1"/><path d="M12 6.5v11"/></svg></span> —</span>
+                    <span id="detailHorario"><span class="meta-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></span> —</span>
                 </div>
                 <div class="detail-actions">
-                    <button class="btn-glass-dark" id="detailComoLlegar">🧭 Cómo llegar</button>
-                    <button class="btn-glass-light" id="detailVerMapa">🗺️ Ver en mapa</button>
-                    <button class="btn-fav" id="detailFavorito" aria-label="Guardar en favoritos">☆</button>
+                    <button class="btn-glass-dark" id="detailComoLlegar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.2l-2 5.6-5.6 2 2-5.6z"/></svg>Cómo llegar</button>
+                    <button class="btn-glass-light" id="detailVerMapa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3 3 5v16l6-2 6 2 6-2V3l-6 2-6-2z"/><path d="M9 3v16M15 5v16"/></svg>Ver en mapa</button>
+                    <button class="btn-fav" id="detailFavorito" aria-label="Guardar en favoritos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2.5l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17.6 5.9 21l1.5-6.8-5.2-4.7 6.9-.7z"/></svg></button>
                 </div>
             </div>
         </section>
 
-        <!-- PANTALLA: MAPA COMPLETO -->
+        <!-- MAPA COMPLETO con panel de proponer sitio -->
         <section class="screen" data-screen="mapa">
             <header class="subbar subbar-transparent">
-                <button class="icon-btn" data-back="inicio" aria-label="Volver">←</button>
+                <button class="icon-btn" id="backFromMap" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
                 <h1>Mapa</h1>
             </header>
             <div id="fullMap"></div>
+
+            <div class="pin-mode-banner" id="pinModeBanner">
+                <span class="meta-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.58 7-12a7 7 0 1 0-14 0c0 4.42 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg></span> Toca el mapa donde está el sitio
+                <button id="cancelarModoAñadir">Cancelar</button>
+            </div>
+
+            <div class="mapa-fab-stack">
+                <button class="btn-ruta-flotante" id="toggleAddPlace"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Proponer sitio</button>
+            </div>
+
+            <div class="ruta-panel" id="addPlacePanel">
+                <div class="ruta-panel-header">
+                    <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Proponer un sitio</h2>
+                    <button class="icon-btn close-ruta-btn" id="closeAddPlacePanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                </div>
+                <div class="ruta-panel-body">
+                    <p style="font-size:13px; color:var(--ink-soft); margin:0 0 12px;">
+                        Toca el mapa para marcar dónde está, luego rellena estos datos.
+                        Lo revisaremos antes de que aparezca como recomendación.
+                    </p>
+                    <div id="addPlaceCoords" style="font-size:12.5px; color:var(--ink-soft); margin-bottom:10px;">
+                        <span class="meta-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.58 7-12a7 7 0 1 0-14 0c0 4.42 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg></span> Aún no has tocado el mapa
+                    </div>
+                    <input type="text" id="addPlaceNombre" placeholder="Nombre del sitio" class="ruta-form-input">
+                    <select id="addPlaceCategoria" class="ruta-form-input">
+                        <option value="sitios">Sitios</option>
+                        <option value="quehacer">Qué hacer</option>
+                        <option value="comida">Comida</option>
+                    </select>
+                    <input type="text" id="addPlaceTipo" placeholder="Tipo (ej: Restaurante, Playa…)" class="ruta-form-input">
+                    <textarea id="addPlaceDescripcion" placeholder="¿Por qué lo recomiendas?" class="ruta-form-input" rows="3"></textarea>
+                    <button class="splash-btn" id="addPlaceGuardarBtn" style="width:100%; margin-top:10px;">
+                        Guardar propuesta
+                    </button>
+                    <div id="addPlaceMensaje" style="margin-top:12px; font-size:13px;"></div>
+                </div>
+            </div>
         </section>
 
-        <!-- PANTALLA: FAVORITOS -->
+        <!-- FAVORITOS -->
         <section class="screen" data-screen="favoritos">
             <header class="subbar">
-                <button class="icon-btn" data-back="inicio" aria-label="Volver">←</button>
+                <button class="icon-btn" data-back="inicio" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
                 <h1>Favoritos</h1>
             </header>
             <div class="content">
@@ -160,29 +224,124 @@
             </div>
         </section>
 
+        <!-- ADMIN -->
+        <section class="screen" data-screen="admin">
+            <header class="subbar">
+                <button class="icon-btn" data-back="inicio" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+                <h1>Panel de Admin</h1>
+                <button id="adminLogout" class="icon-btn" style="margin-left:auto;" aria-label="Cerrar sesión"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h7"/><path d="M16 12h5m0 0-2.5-2.5M21 12l-2.5 2.5"/></svg></button>
+            </header>
+            <div class="content">
+                <h2 style="margin-top:0;">Todos los lugares</h2>
+                <div id="adminList" class="place-list"></div>
+            </div>
+        </section>
+
+        <!-- PANEL DE EDICIÓN (para admin) -->
+        <div class="ruta-panel" id="editPlacePanel">
+            <div class="ruta-panel-header">
+                <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Editar lugar</h2>
+                <button class="icon-btn close-ruta-btn" id="closeEditPlacePanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="ruta-panel-body">
+                <input type="text" id="editPlaceNombre" placeholder="Nombre" class="ruta-form-input">
+                <select id="editPlaceCategoria" class="ruta-form-input">
+                    <option value="sitios">Sitios</option>
+                    <option value="quehacer">Qué hacer</option>
+                    <option value="comida">Comida</option>
+                </select>
+                <input type="text" id="editPlaceTipo" placeholder="Tipo (ej: Restaurante, Playa…)" class="ruta-form-input">
+                <textarea id="editPlaceDescripcion" placeholder="Descripción" class="ruta-form-input" rows="3"></textarea>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="editPlaceLat" placeholder="Latitud" class="ruta-form-input" style="flex:1;">
+                    <input type="text" id="editPlaceLon" placeholder="Longitud" class="ruta-form-input" style="flex:1;">
+                </div>
+                <input type="text" id="editPlacePrecio" placeholder="Precio (ej: €€, 15€/persona…)" class="ruta-form-input">
+                <input type="text" id="editPlaceHorario" placeholder="Horario (ej: 10:00–22:00)" class="ruta-form-input">
+                <div style="display:flex; gap:20px; margin-bottom:10px; font-size:14px;">
+                    <label><input type="checkbox" id="editPlaceRecomendado"> Recomendado</label>
+                    <label><input type="checkbox" id="editPlaceActivo"> Activo</label>
+                </div>
+                <button class="splash-btn" id="editPlaceGuardarBtn" style="width:100%;">Guardar cambios</button>
+                <div id="editPlaceMensaje" style="margin-top:12px; font-size:13px;"></div>
+            </div>
+        </div>
+
+        <!-- MI CUENTA -->
+        <section class="screen" data-screen="cuenta">
+            <header class="subbar">
+                <button class="icon-btn" data-back="inicio" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+                <h1>Mi cuenta</h1>
+            </header>
+            <div class="content">
+
+                <!-- Sesión activa -->
+                <div id="cuentaLogged" style="display:none;">
+                    <div class="cuenta-card">
+                        <div class="cuenta-avatar" id="cuentaAvatar">C</div>
+                        <h2 id="cuentaNombre">—</h2>
+                        <p id="cuentaEmail" class="cuenta-email"></p>
+                    </div>
+                    <button class="btn-glass-dark" id="cuentaAdminBtn" style="width:100%; margin-top:20px; display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Panel de Admin</button>
+                    <button class="btn-glass-light" id="cuentaLogoutBtn" style="width:100%; margin-top:12px;">Cerrar sesión</button>
+                </div>
+
+                <!-- Sin sesión -->
+                <div id="cuentaForms">
+                    <div class="splash-auth-tabs splash-auth-tabs-dark">
+                        <button class="splash-auth-tab splash-auth-tab-dark active" id="cuentaTabSignup" type="button">Crear cuenta</button>
+                        <button class="splash-auth-tab splash-auth-tab-dark" id="cuentaTabLogin" type="button">Iniciar sesión</button>
+                    </div>
+
+                    <div class="splash-auth-panel" id="cuentaPanelSignup">
+                        <input type="text" id="cuentaSignupNombre" class="ruta-form-input" placeholder="Tu nombre" autocomplete="name">
+                        <input type="email" id="cuentaSignupEmail" class="ruta-form-input" placeholder="Email" autocomplete="username">
+                        <input type="password" id="cuentaSignupPassword" class="ruta-form-input" placeholder="Contraseña" autocomplete="new-password">
+                        <button class="splash-btn" id="cuentaSignupBtn" style="width:100%;" type="button">Crear cuenta</button>
+                    </div>
+
+                    <div class="splash-auth-panel" id="cuentaPanelLogin" style="display:none;">
+                        <input type="email" id="cuentaLoginEmail" class="ruta-form-input" placeholder="Email" autocomplete="username">
+                        <input type="password" id="cuentaLoginPassword" class="ruta-form-input" placeholder="Contraseña" autocomplete="current-password">
+                        <button class="splash-btn" id="cuentaLoginBtn" style="width:100%;" type="button">Iniciar sesión</button>
+                    </div>
+
+                    <div id="cuentaMensaje" style="margin-top:12px; font-size:13px;"></div>
+                </div>
+            </div>
+        </section>
+
         <!-- BARRA INFERIOR -->
         <nav class="bottom-nav" id="bottomNav">
             <button class="nav-item active" data-screen-target="inicio">
-                <span>🏠</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h3v-6h4v6h3a1 1 0 0 0 1-1v-9"/></svg></span>
                 Inicio
             </button>
             <button class="nav-item" data-screen-target="mapa">
-                <span>🗺️</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3 3 5v16l6-2 6 2 6-2V3l-6 2-6-2z"/><path d="M9 3v16M15 5v16"/></svg></span>
                 Mapa
             </button>
             <button class="nav-item" data-screen-target="favoritos">
-                <span>⭐</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2.5l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L12 17.6 5.9 21l1.5-6.8-5.2-4.7 6.9-.7z"/></svg></span>
                 Favoritos
+            </button>
+            <button class="nav-item" id="adminNavBtn" data-screen-target="admin" style="display:none;">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+                Admin
+            </button>
+            <button class="nav-item" id="cuentaNavBtn" data-screen-target="cuenta">
+                <span id="cuentaNavIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/></svg></span>
+                <span id="cuentaNavLabel">Cuenta</span>
             </button>
         </nav>
 
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="settings.js"></script>
     <script src="app.js"></script>
 </body>
 
 </html>
-
